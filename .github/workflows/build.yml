@@ -1,6 +1,6 @@
 # File: .github/workflows/build.yml
 
-name: Build and Upload JAR Artifact
+name: Build and Upload WAR Artifact
 
 on:
   push:
@@ -37,10 +37,10 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      # Step 5: Upload the resulting JAR as a workflow artifact
+      # Step 5: Upload the resulting WAR as a workflow artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: fomo-app-build
-          path: target/*.jar
+          path: target/*.war
           if-no-files-found: error
