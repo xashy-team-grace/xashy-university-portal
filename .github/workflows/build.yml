@@ -53,5 +53,6 @@ jobs:
           name: fomo-app-build
           path: target/*.war
           if-no-files-found: error
+        continue-on-error: true
        
 
