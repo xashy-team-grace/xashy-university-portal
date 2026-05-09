@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - fomo-actions  # Trigger only on push to 'fomo-actions' branch
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -43,8 +46,8 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          projectKey: fomo-app
+        #continue-on-error: true
+
 
       # Step 6: Upload the resulting WAR as a workflow artifact
       - name: Upload artifact
@@ -53,6 +56,6 @@ jobs:
           name: fomo-app-build
           path: target/*.war
           if-no-files-found: error
-        continue-on-error: true
+        
        
 
