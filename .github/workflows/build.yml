@@ -37,10 +37,21 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      # Step 5: Upload the resulting WAR as a workflow artifact
+      # Step 5: Security Scan with SonarQube
+      - name: Security Scan with SonarQube
+        uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          projectKey: fomo-app
+
+      # Step 6: Upload the resulting WAR as a workflow artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: fomo-app-build
           path: target/*.war
           if-no-files-found: error
+       
+
