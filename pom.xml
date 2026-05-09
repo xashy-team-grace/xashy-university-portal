@@ -22,9 +22,9 @@
         <servlet.version>4.0.1</servlet.version>
         
         <!-- SonarQube Cloud Properties -->
-        <sonar.organization>01211820sms</sonar.organization>
+        <sonar.organization>xashy-team-grace</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.projectKey>walleyjay_xashy-university-portal</sonar.projectKey>
+        <sonar.projectKey>xashy-team-grace_xashy-university-portal</sonar.projectKey>
         <sonar.projectName>Xashy Tech University Student Portal</sonar.projectName>
         <sonar.projectVersion>${project.version}</sonar.projectVersion>
         <sonar.sources>src/main/java,src/main/webapp</sonar.sources>
