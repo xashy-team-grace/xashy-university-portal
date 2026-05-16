@@ -1,48 +1,45 @@
-name: First CI Pipeline Project - Simple Maven
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
 
-# First block on your pipeline config is the trigger
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
 
 on:
-    push:
-        branches: [ main, simon-sca ]
-    
-    pull_request:
-        branches: [ main, simon-sca ]
+  push:
+    branches: [ "main", "feature-simon" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-    build-job:
-        runs-on: ubuntu-latest
+  build:
 
-        steps:
-            # - name: 1. Clone the code
-            #   env:
-            #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            #   run: |
-            #     git init
-            #     git remote add origin https://github.com/${{ github.repository }}
-            #     git fetch --depth 1 origin ${{ github.ref }}
-            #     git checkout FETCH_HEAD
+    runs-on: ubuntu-latest
 
-            - name: 1.1 Clone with actions
-              uses: actions/checkout@v6
-            
-            - name: 2. Check Java and Maven versions
-              run: |
-               java --version
-               mvn --version
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
 
-            # - name: 3. The Actual Build
-            #   run: |
-            #    mvn compile
-            #    mvn test
-            #    mvn package
+    - name: Security Scan with SonarQube
+      uses: SonarSource/sonarqube-scan-action@v8
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v7
+      with:
+         name: war-artifact
+         path: "./target/*"
 
-            - name: 3.1 Build with Action
-              uses: dienha93/maven-actions@v1.0.0
-              with:
-                operation: 'package'
-                java-version: '8'
-                maven-version: '2.18.1'
-
-            - name: 4. List the JAR file
-              run: ls -l target/*.jar
+    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+    # - name: Update dependency graph
+      # uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
