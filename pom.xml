@@ -6,7 +6,7 @@
     
     <modelVersion>4.0.0</modelVersion>
     
-    <groupId>com.xashytech.university</groupId>
+    <groupId>com.xashytecarh.university</groupId>
     <artifactId>student-portal</artifactId>
     <version>1.0.0</version>
     <packaging>war</packaging>
