@@ -49,11 +49,11 @@ jobs:
           output-file: sbom.spdx.json
 
       - name: Scan SBOM with Grype
-        uses: anchore/scan-action@v3
-        with:
-          sbom: sbom.spdx.json
-          fail-build: true
-          severity-cutoff: critical   # Fail on ANY vulnerability
+        run: >
+          curl -sSfL https://get.anchore.io/grype | sudo sh -s -- -b /usr/local/bin
+          grype --fail-on low sbom:sbom.spdx.json
+
+        
 
   # ============================================
   # JOB 3: Upload Artifact (only if Grype found nothing)
