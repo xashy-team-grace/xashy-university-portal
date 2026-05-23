@@ -6,6 +6,10 @@ on:
   push:
     branches:
       - fomo-actions
+      - feature-colin
+  pull_request: 
+    branches: [ "main" ]
+  workflow_dispatch: 
 
 jobs:
   # ============================================
@@ -83,7 +87,6 @@ jobs:
           cache: maven
 
       - name: Run SonarQube Analysis
-        working-directory:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}

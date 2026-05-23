@@ -9,10 +9,10 @@
 name: University Portal CI
 
 on:
-  push:
-    branches: [ "main", "feature-colin" ]
-  pull_request:
-    branches: [ "main" ]
+  # push:
+  #   branches: [ "main", "feature-colin" ]
+  # pull_request:
+  #   branches: [ "main" ]
   workflow_dispatch:
     
 
@@ -23,6 +23,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -33,7 +35,7 @@ jobs:
     - name: Build and analyze
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=xashy-team-grace_xashy-university-portal
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=xashy-team-grace_xashy-university-portal -Dsonar.qualitygate.wait=true
 
       
     - name: Upload Build Artifact

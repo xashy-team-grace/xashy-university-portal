@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
 
 /**
  * Service class for managing students
@@ -14,7 +15,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * For teaching purposes, we'll use an in-memory list
  */
 public class StudentService {
-    
+
+    private static final Logger LOGGER = Logger.getLogger(StudentService.class.getName());
     private static final List<Student> students = new ArrayList<>();
     private static final AtomicLong idCounter = new AtomicLong(1);
     private static boolean initialized = false;
@@ -64,7 +66,7 @@ public class StudentService {
             students.add(student4);
             
             initialized = true;
-            System.out.println("Initialized " + students.size() + " sample students");
+            LOGGER.info(() -> "Initialized " + students.size() + " sample students");
         }
     }
     
@@ -100,7 +102,7 @@ public class StudentService {
         student.setId(idCounter.getAndIncrement());
         student.setEnrollmentDate(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         students.add(student);
-        System.out.println("Added new student: " + student.getName() + " (ID: " + student.getId() + ")");
+        LOGGER.info(() -> "Added new student: " + student.getName() + " (ID: " + student.getId() + ")");
         return student;
     }
     
@@ -111,7 +113,7 @@ public class StudentService {
         for (int i = 0; i < students.size(); i++) {
             if (students.get(i).getId().equals(updatedStudent.getId())) {
                 students.set(i, updatedStudent);
-                System.out.println("Updated student: " + updatedStudent.getName());
+                LOGGER.info(() -> "Updated student: " + updatedStudent.getName());
                 return true;
             }
         }
@@ -124,7 +126,7 @@ public class StudentService {
     public boolean deleteStudent(Long id) {
         boolean removed = students.removeIf(student -> student.getId().equals(id));
         if (removed) {
-            System.out.println("Deleted student with ID: " + id);
+            LOGGER.info(() -> "Deleted student with ID: " + id);
         }
         return removed;
     }
