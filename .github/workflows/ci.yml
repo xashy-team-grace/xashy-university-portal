@@ -9,10 +9,10 @@
 name: University Portal CI
 
 on:
-  push:
-    branches: [ "main", "feature-colin" ]
-  pull_request:
-    branches: [ "main" ]
+  # push:
+  #   branches: [ "main", "feature-colin" ]
+  # pull_request:
+  #   branches: [ "main" ]
   workflow_dispatch:
     
 
