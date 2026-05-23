@@ -61,39 +61,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
-
-        <!--
-            ============================================================
-            INTENTIONALLY VULNERABLE DEPENDENCIES - FOR TRAINING ONLY
-            ============================================================
-            These packages contain known critical CVEs and exist solely
-            for SCA / vulnerability-scanning exercises. DO NOT deploy
-            the resulting WAR to any network-reachable environment.
-            ============================================================
-        -->
-
-
-        <!-- CVE-2021-44228 (Log4Shell) - Critical RCE via JNDI lookup in log messages -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.14.1</version>
-        </dependency>
-
-        <!-- Multiple CVEs - Polymorphic deserialization RCE chain -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.9.10</version>
-        </dependency>
-
-        <!-- CVE-2015-7501 - Unsafe deserialization gadget chain (InvokerTransformer) -->
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
-        </dependency>
     </dependencies>
 
     <!-- GitHub Packages repository -->
