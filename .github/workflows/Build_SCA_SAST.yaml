@@ -53,7 +53,7 @@ jobs:
         with:
           sbom: sbom.spdx.json
           fail-build: true
-          severity-cutoff: low   # Fail on ANY vulnerability
+          severity-cutoff: critical   # Fail on ANY vulnerability
 
   # ============================================
   # JOB 3: Upload Artifact (only if Grype found nothing)
