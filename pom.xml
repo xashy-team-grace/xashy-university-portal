@@ -73,6 +73,7 @@
             ============================================================
         -->
 
+
         <!-- CVE-2021-44228 (Log4Shell) - Critical RCE via JNDI lookup in log messages -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
