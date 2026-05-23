@@ -53,21 +53,6 @@ jobs:
           curl -sSfL https://get.anchore.io/grype | sudo sh -s -- -b /usr/local/bin
           grype --fail-on low sbom:sbom.spdx.json
 
-        
-
-  # ============================================
-  # JOB 3: Upload Artifact (only if Grype found nothing)
-  # ============================================
-  upload-artifact:
-    runs-on: ubuntu-latest
-    needs: [build-and-testing, software-composition-analysis]
-    if: success()
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          repository: xashy-team-grace/xashy-university-portal
-
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
