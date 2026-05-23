@@ -49,7 +49,7 @@ jobs:
           output-file: sbom.spdx.json
 
       - name: Scan SBOM with Grype
-        run: >
+        run: |
           curl -sSfL https://get.anchore.io/grype | sudo sh -s -- -b /usr/local/bin
           grype --fail-on low sbom:sbom.spdx.json
 
