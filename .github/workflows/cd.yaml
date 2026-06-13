@@ -38,7 +38,10 @@ jobs:
           name: war-artifact
           path: ./artifact
           # workflow_run gives us the upstream run id; dispatch supplies it manually.
-          run-id: ${{ github.event.workflow_run.id || inputs.run_id }}           # <-- set your region
+          run-id: ${{ github.event.workflow_run.id || inputs.run_id }}
+          # Required when run-id points at a different workflow run: the action
+          # needs a token to query that run's artifacts via the REST API.
+          github-token: ${{ secrets.GITHUB_TOKEN }}
  
       - name: Install AWS CLI
         id: install-aws-cli
