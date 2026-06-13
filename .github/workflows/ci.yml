@@ -1,47 +1,94 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+# File: .github/workflows/Build_SCA_SAST.yaml
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: University Portal CI
+name: Build, SCA, SAST Pipeline
 
 on:
-  # push:
-  #   branches: [ "main", "feature-colin" ]
-  # pull_request:
-  #   branches: [ "main" ]
-  workflow_dispatch:
-    
+  push:
+    branches:
+      - fomo-actions
+      - feature-colin
+  pull_request: 
+    branches: [ "main" ]
+  workflow_dispatch: 
 
 jobs:
-  build:
-
+  # ============================================
+  # JOB 1: Build and Testing
+  # ============================================
+  build-and-testing:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: xashy-team-grace/xashy-university-portal
 
-    - name: Build and analyze
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=xashy-team-grace_xashy-university-portal -Dsonar.qualitygate.wait=true
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
-      
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v7
-      with:
-        name: war-artifact
-        path: "./target/*.war"
+      - name: Build with Maven
+        working-directory: ./
+        run: mvn -B clean verify --file pom.xml
 
-      
+  # ============================================
+  # JOB 2: Software Composition Analysis (SCA)
+  # ============================================
+  software-composition-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: xashy-team-grace/xashy-university-portal
+
+      - name: Build with Maven
+        run: mvn -B clean verify --file pom.xml
+
+      - name: Generate SBOM with Syft
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Scan SBOM with Grype
+        run: |
+          curl -sSfL https://get.anchore.io/grype | sudo sh -s -- -b /usr/local/bin
+          grype --fail-on low sbom:sbom.spdx.json
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: war-artifact
+          path: ./target/*.war
+          if-no-files-found: error
+
+  # ============================================
+  # JOB 4: SAST with SonarQube
+  # ============================================
+  sast-sonarqube:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: xashy-team-grace/xashy-university-portal
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: >
+         mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
