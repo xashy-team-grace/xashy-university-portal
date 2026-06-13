@@ -4,9 +4,6 @@ name: Build, SCA, SAST Pipeline
 
 on:
   push:
-    branches:
-      - fomo-actions
-      - feature-colin
   pull_request: 
     branches: [ "main" ]
   workflow_dispatch: 
